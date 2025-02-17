@@ -41,7 +41,7 @@ func ParseCreateIndex(s string) IndexDef {
 		idxwith := strings.Index(utail, "WITH")
 		idxtbsp := strings.Index(utail, "TABLESPACE")
 		idxwhere := strings.Index(utail, "WHERE")
-		if idxwith >= 0 {
+		if idxwith >= 0 && idxwith < idxwhere { // avoid matching timestamp with/without time zone in where clause
 			idxto := len(tail)
 			if idxwhere >= 0 {
 				idxto = idxwhere
