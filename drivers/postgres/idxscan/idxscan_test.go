@@ -86,3 +86,27 @@ func TestParseCreateIndex_WithAndTimestampWithoutTimezone(t *testing.T) {
 		t.Errorf("%#v", ss)
 	}
 }
+
+func TestParseCreateIndex_NoWhere(t *testing.T) {
+	s := `CREATE UNIQUE INDEX \"IX_customer_external_id\"
+	ON public.customer
+	USING btree (external_id)
+	WITH a= b`
+
+	ss := ParseCreateIndex(s)
+	eq := IndexDef{
+		Name:         "\\\"IX_customer_external_id\\\"",
+		Table:        "public.customer",
+		Unique:       true,
+		Concurrently: false,
+		UsingType:    "btree",
+		ColDef:       "(external_id)",
+		With:         "a= b",
+		Tablespace:   "",
+		Where:        "",
+	}
+
+	if !reflect.DeepEqual(ss, eq) {
+		t.Errorf("%#v", ss)
+	}
+}
